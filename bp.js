@@ -4,13 +4,35 @@ function Player() {
 	//Player Variables
 	var playerState = 0; //0 for running, 1 for sliding, 2 for jumping
 	var y = 0;
+	var yVel = 0;
+	var inAir = false;
 
 	//Player methods
-	this.setState = function(newState) {
+	this.duck = function() {
 		if(playerState === 0)
-			playerState = newState;
+			playerState = 1;
 	}
 
+	this.standUp = function() {
+		playerState = 0;
+		y = 0;
+		yVel = 0;
+		inAir = false;
+	}
+
+	this.jump = function() {
+		inAir = true;
+		yVel = INIT_Y_VEL;
+		playerState = 2;
+	}
+
+	this.setY = function(newY) {
+		y = newY;
+	}
+
+	this.changeYVel = function() {
+		yVel -= Y_ACCELERATION;
+	}
 
 	//_Player accessors 
 	this.getPlayerState = function() {
@@ -19,6 +41,14 @@ function Player() {
 
 	this.getY = function() {
 		return y;
+	}
+
+	this.getInAir = function() {
+		return inAir;
+	}
+
+	this.getYVel = function() {
+		return yVel;
 	}
 }
 //****************** OBSTACLES ************************
@@ -65,7 +95,12 @@ var PLAYER_HEIGHT = 30;
 var PLAYER_WIDTH = 15;
 var PLAYER_DUCK_HEIGHT = 20;
 var PLAYER_DUCK_WIDTH = 25;
-var OBSTACLE_DIMENSION = 23;
+var LOW_OBSTACLE_HEIGHT = 20;
+var LOW_OBSTACLE_WIDTH = 15;
+var HIGH_OBSTACLE_HEIGHT = 40;
+var HIGH_OBSTACLE_WIDTH = 15;
+var Y_ACCELERATION = 7;
+var INIT_Y_VEL = 27;
 
 //****************** HELPER FUNCTIONS ***************************
 var startNewGame = function() {
@@ -74,9 +109,18 @@ var startNewGame = function() {
 }
 
 var update = function() {
+	
+	//Obstacle Logic
 	for(var i = 0; i < obstacleArray.length; i++)
 	{
-		obstacleArray[i].updateX(speedLvl * 3);
+		obstacleArray[i].updateX(speedLvl + 5);
+	}
+
+	//Player Logic
+	if(player.getInAir())
+	{
+		player.setY(player.getY() + player.getYVel());
+		player.changeYVel();
 	}
 }
 
@@ -96,10 +140,10 @@ var draw = function() {
 			ctx.fillRect(50, SCREEN_HEIGHT - 10 - PLAYER_HEIGHT, PLAYER_WIDTH, PLAYER_HEIGHT);
 			break;
 		case 1:
-			ctx.fillRect(50, SCREEN_HEIGHT - 10 - PLAYER_DUCK_HEIGHT, PLAYER_DUCK_WIDTH, PLAYER_DUCK_HEIGHT);
+			ctx.fillRect(47, SCREEN_HEIGHT - 10 - PLAYER_DUCK_HEIGHT, PLAYER_DUCK_WIDTH, PLAYER_DUCK_HEIGHT);
 			break;
 		case 2:
-			ctx.fillRect(50, SCREEN_HEIGHT - 10 - PLAYER_HEIGHT, PLAYER_WIDTH, PLAYER_HEIGHT);
+			ctx.fillRect(50, SCREEN_HEIGHT - 10 - PLAYER_HEIGHT - player.getY(), PLAYER_WIDTH, PLAYER_HEIGHT);
 			break;
 	}
 	
@@ -111,12 +155,12 @@ var draw = function() {
 		if(obstacleArray[i].getType() === 0)
 		{
 			ctx.fillStyle = "red";
-			ctx. fillRect(obstacleArray[i].getX(), SCREEN_HEIGHT - 10 - OBSTACLE_DIMENSION, OBSTACLE_DIMENSION, OBSTACLE_DIMENSION);
+			ctx. fillRect(obstacleArray[i].getX(), SCREEN_HEIGHT - 10 - LOW_OBSTACLE_HEIGHT, LOW_OBSTACLE_WIDTH, LOW_OBSTACLE_HEIGHT);
 		}
 		else
 		{
 			ctx.fillStyle = "blue";
-			ctx. fillRect(obstacleArray[i].getX(), SCREEN_HEIGHT - 10 - OBSTACLE_DIMENSION * 2, OBSTACLE_DIMENSION, OBSTACLE_DIMENSION);
+			ctx. fillRect(obstacleArray[i].getX(), SCREEN_HEIGHT - 10 - HIGH_OBSTACLE_HEIGHT - 22, HIGH_OBSTACLE_WIDTH, HIGH_OBSTACLE_HEIGHT);
 		}
 	}
 	
@@ -135,10 +179,18 @@ function keyDown(e) {
 			startNewGame();
 			break;
 		case DOWN:
-			player.setState(1);
+			if(player.getPlayerState() === 0 && initialized)
+			{
+				player.duck();
+				setTimeout(player.standUp, 400);
+			}	
 			break;
-		case UP:
-			playerer.setState(2);
+		case SPACE:
+			if(player.getPlayerState() === 0 && initialized)
+			{
+				player.jump();
+				setTimeout(player.standUp, 400);
+			}	
 			break;	
 	} 
 }
