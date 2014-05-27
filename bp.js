@@ -1,3 +1,7 @@
+/*
+Author: Ian Char
+Date: 5/26/2014
+*/
 
 //****************** PLAYER ************************
 function Player() {
