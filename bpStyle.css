@@ -9,3 +9,162 @@
 	width:  1000px;
 	border: 5px solid black;
 }
+
+#gameZone {
+	float: left; 
+	margin-top: -75px;
+}
+
+footer {
+	text-align: center;
+	clear: both;
+}
+
+header{
+
+}
+
+h1{
+    font-size:32pt;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+
+}
+
+h2{
+    font-size: 18pt;
+    padding-top: 0px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+
+
+}
+
+
+#navDiv {
+    font-size: 16pt;
+    padding-bottom: 10px;
+    border: 1px solid black;
+    height: 30px;
+    margin-bottom: 15px;
+
+}
+
+nav {
+    margin-top: -20px;
+}
+
+li {
+    display: inline-block;
+	margin-left: 75px;
+    margin-right: 75px;
+    margin-top: -150px;
+    margin-bottom: -150px; 
+    padding: 0px;
+}
+
+
+aside {
+    float: left;
+    margin-bottom: 50px;
+}
+
+section {
+    clear: both;
+    position: auto;
+
+}
+
+#HomeText {
+    float: right;
+    width: 600px;
+
+}
+
+
+body{
+    font-family: 'News Cycle', sans-serif;
+    font-size: 12pt;
+}
+
+.SlideHead {
+    font-size: 12pt;
+    font-weight: bold;
+    margin-top: -3px;
+}
+
+.ClickSlide {
+    width: 800px;
+    height: 25px;
+    border: 1px solid black;
+    margin-top: 60px;
+    margin-bottom: 5px;
+    background-color: #ACECF8;
+    padding: 0px;
+
+}
+
+
+#container {
+
+    margin: 0 auto;
+    width: 960px;
+}
+
+ul{
+    background-color: #77E4F8;
+    height: 39px;
+
+}
+
+table {
+    width: 1000px;
+    margin-bottom: 50px;
+}
+
+tr {
+    border: 1px solid black;
+}
+
+th {
+    background-color: #ACECF8;
+    border: 1px solid black;
+}
+
+td {
+    border: 1px solid black;
+    
+}
+
+.descrip {
+    width: 450px;
+}
+
+.grade {
+
+    width: 75px;
+    text-align: center;
+}
+
+#currDescrip {
+    width: 600px;
+}
+
+#currTaken {
+    width: 75px;
+}
+
+
+@font-face {
+  font-family: 'News Cycle';
+  font-style: normal;
+  font-weight: 400;
+  src: local('News Cycle Regular'), local('NewsCycle-Regular'), url(http://themes.googleusercontent.com/static/fonts/newscycle/v10/9Xe8dq6pQDsPyVH2D3tMQhsxEYwM7FgeyaSgU71cLG0.woff) format('woff');
+}
+
+a.nav{ color: black; text-decoration: none;}  
+.nav:link {color: black; text-decoration: none;}
+.nav:visited {color: black; text-decoration: none;}
+.nav:hover {color: black; font-weight: bold; }
+.nav:active {color: black; font-weight: bold;}

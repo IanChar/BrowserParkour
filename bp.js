@@ -60,10 +60,15 @@ function Obstacle(obstType) {
 	//Obstacle Variables
 	var type = obstType; //0 is for low 1 is for high 
 	var x = 300;
+	var hasBeenScored = false;
 
 	//Obstacle Methods
 	this.updateX = function(xVel) {
 		x = x - xVel;
+	}
+
+	this.scored = function() {
+		hasBeenScored = true;
 	}
 
 	//Obstacle accessors 
@@ -73,6 +78,10 @@ function Obstacle(obstType) {
 
 	this.getX = function() {
 		return x;
+	}
+
+	this.getHasBeenScored = function() {
+		return hasBeenScored;
 	}
 }
 
@@ -87,6 +96,7 @@ var score = 0;
 var initialized = false; // Tells if the game is running or not 
 var player = new Player();
 var obstacleArray = [];
+var canSpawn = true;
 
 //Constants
 var SPACE = 32;
@@ -109,6 +119,8 @@ var INIT_Y_VEL = 27;
 var startNewGame = function() {
 	initialized = true;
 	obstacleArray.splice(0, obstacleArray.length);
+	score = 0;
+	speedLvl = 1;
 }
 
 var spawnObstacles = function(authorized) {
@@ -165,9 +177,12 @@ var update = function() {
 	//Obstacle Logic
 	for(var i = 0; i < obstacleArray.length; i++)
 	{
-		obstacleArray[i].updateX(speedLvl + 9);
-		if(obstacleArray[i].getX() <= (47 - HIGH_OBSTACLE_WIDTH))
+		obstacleArray[i].updateX(speedLvl + 7);
+		if(!(obstacleArray[i].getHasBeenScored()) && obstacleArray[i].getX() <= (47 - HIGH_OBSTACLE_WIDTH))
+		{
 			score++;
+			obstacleArray[i].scored();
+		}	
 	}
 
 	while(obstacleArray.length >= 1 && obstacleArray[0].getX() <= -50)
@@ -188,7 +203,19 @@ var update = function() {
 		initialized = false;
 	}
 
-	spawnObstacles(true);
+	//Increase speedLvl
+	if((score - (speedLvl - 1) * 5) >= (speedLvl * 5))
+	{
+		speedLvl++;
+		canSpawn = false;
+	}
+
+	if(!canSpawn && obstacleArray.length == 0)
+	{
+		canSpawn = true;
+	}
+
+	spawnObstacles(canSpawn);
 }
 
 var draw = function() {
