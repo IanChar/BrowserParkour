@@ -84,7 +84,6 @@ var ctx = canvas.getContext("2d");
 //Game Variables
 var speedLvl = 1;
 var score = 0;
-var playerState = 0; //0 for standing, 1 for ducking, 2 for jumping 
 var initialized = false; // Tells if the game is running or not 
 var player = new Player();
 var obstacleArray = [];
@@ -96,7 +95,7 @@ var ENTER = 13;
 var SCREEN_HEIGHT = 150;
 var SCREEN_WIDTH = 300;
 var PLAYER_HEIGHT = 30;
-var PLAYER_WIDTH = 15;
+var PLAYER_WIDTH = 16;
 var PLAYER_DUCK_HEIGHT = 20;
 var PLAYER_DUCK_WIDTH = 25;
 var LOW_OBSTACLE_HEIGHT = 20;
@@ -112,6 +111,42 @@ var startNewGame = function() {
 	//obstacleArray.splice(0, obstacleArray.length);
 }
 
+var checkForCollision = function() {
+	for(var i = 0; i < obstacleArray.length; i++)
+	{
+
+		switch(obstacleArray[i].getType())
+		{
+			/**
+			case 0:
+				if((player.getPlayerState() == 1 && !(obstacleArray[i].getX() <= (47 - LOW_OBSTACLE_WIDTH))) || (player.getPlayerState() != 1 && !(obstacleArray[i].getX() <= (50 - LOW_OBSTACLE_WIDTH))))	
+				{
+					if(player.getPlayerState() == 1 && obstacleArray[i].getX() <= (47 + PLAYER_DUCK_WIDTH))
+						return true;
+					else if(player.getPlayerState() != 1 && obstacleArray[i].getX() <= (51 + PLAYER_WIDTH))
+					{
+						if(player.getPlayerState() == 0)
+							return true;
+						else if(player.getY() <= LOW_OBSTACLE_HEIGHT)
+							return true;
+					}
+				}	
+				break;
+			*/
+
+			case 1:
+				if((player.getPlayerState() == 1 && !(obstacleArray[i].getX() <= (47 - HIGH_OBSTACLE_WIDTH))) || (player.getPlayerState() != 1 && !(obstacleArray[i].getX() <= (50 - HIGH_OBSTACLE_WIDTH))))	
+				{
+					if(player.getPlayerState() != 1 && obstacleArray[i].getX() <= (51 + PLAYER_WIDTH))
+						return true;
+				}	
+				break;
+		}	
+	}
+
+	return false;
+}
+
 var update = function() {
 	
 	//Obstacle Logic
@@ -120,11 +155,22 @@ var update = function() {
 		obstacleArray[i].updateX(speedLvl + 5);
 	}
 
+	while(obstacleArray.length >= 1 && obstacleArray[0].getX() <= -50)
+	{
+		obstacleArray.shift();
+	}
+
 	//Player Logic
 	if(player.getInAir())
 	{
 		player.setY(player.getY() + player.getYVel());
 		player.changeYVel();
+	}
+
+	//Check for collisions
+	if(checkForCollision())
+	{
+		initialized = false;
 	}
 }
 
@@ -172,7 +218,9 @@ var draw = function() {
 
 var loop = function() {
 	if(initialized)
+	{
 		update();
+	}
 	draw();
 }
 
