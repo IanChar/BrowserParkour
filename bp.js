@@ -95,7 +95,7 @@ var ENTER = 13;
 var SCREEN_HEIGHT = 150;
 var SCREEN_WIDTH = 300;
 var PLAYER_HEIGHT = 30;
-var PLAYER_WIDTH = 16;
+var PLAYER_WIDTH = 17;
 var PLAYER_DUCK_HEIGHT = 20;
 var PLAYER_DUCK_WIDTH = 25;
 var LOW_OBSTACLE_HEIGHT = 20;
@@ -108,7 +108,20 @@ var INIT_Y_VEL = 27;
 //****************** HELPER FUNCTIONS ***************************
 var startNewGame = function() {
 	initialized = true;
-	//obstacleArray.splice(0, obstacleArray.length);
+	obstacleArray.splice(0, obstacleArray.length);
+}
+
+var spawnObstacles = function(authorized) {
+	if(authorized)
+	{
+		if(obstacleArray.length == 0 || obstacleArray[obstacleArray.length - 1].getX() < (SCREEN_WIDTH - 100))
+		{
+			if(Math.random() <= 0.34)
+			{
+				obstacleArray.push(new Obstacle(Math.floor(2 * Math.random())));
+			}
+		}
+	}
 }
 
 var checkForCollision = function() {
@@ -117,13 +130,13 @@ var checkForCollision = function() {
 
 		switch(obstacleArray[i].getType())
 		{
-			/**
+			
 			case 0:
 				if((player.getPlayerState() == 1 && !(obstacleArray[i].getX() <= (47 - LOW_OBSTACLE_WIDTH))) || (player.getPlayerState() != 1 && !(obstacleArray[i].getX() <= (50 - LOW_OBSTACLE_WIDTH))))	
 				{
 					if(player.getPlayerState() == 1 && obstacleArray[i].getX() <= (47 + PLAYER_DUCK_WIDTH))
 						return true;
-					else if(player.getPlayerState() != 1 && obstacleArray[i].getX() <= (51 + PLAYER_WIDTH))
+					else if(player.getPlayerState() != 1 && obstacleArray[i].getX() <= (50 + PLAYER_WIDTH))
 					{
 						if(player.getPlayerState() == 0)
 							return true;
@@ -132,12 +145,12 @@ var checkForCollision = function() {
 					}
 				}	
 				break;
-			*/
+			
 
 			case 1:
 				if((player.getPlayerState() == 1 && !(obstacleArray[i].getX() <= (47 - HIGH_OBSTACLE_WIDTH))) || (player.getPlayerState() != 1 && !(obstacleArray[i].getX() <= (50 - HIGH_OBSTACLE_WIDTH))))	
 				{
-					if(player.getPlayerState() != 1 && obstacleArray[i].getX() <= (51 + PLAYER_WIDTH))
+					if(player.getPlayerState() != 1 && obstacleArray[i].getX() <= (50 + PLAYER_WIDTH))
 						return true;
 				}	
 				break;
@@ -152,7 +165,9 @@ var update = function() {
 	//Obstacle Logic
 	for(var i = 0; i < obstacleArray.length; i++)
 	{
-		obstacleArray[i].updateX(speedLvl + 5);
+		obstacleArray[i].updateX(speedLvl + 9);
+		if(obstacleArray[i].getX() <= (47 - HIGH_OBSTACLE_WIDTH))
+			score++;
 	}
 
 	while(obstacleArray.length >= 1 && obstacleArray[0].getX() <= -50)
@@ -172,6 +187,8 @@ var update = function() {
 	{
 		initialized = false;
 	}
+
+	spawnObstacles(true);
 }
 
 var draw = function() {
@@ -249,10 +266,6 @@ function keyDown(e) {
 
 //******************* MAIN ********************************
 var main = function(){
-	var low = new Obstacle(0);
-    var high = new Obstacle(1);
-	obstacleArray.push(low); obstacleArray.push(high);
-
 	var interval = setInterval(loop, 50);
 
 }
