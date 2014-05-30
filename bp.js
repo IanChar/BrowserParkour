@@ -110,7 +110,7 @@ var PLAYER_DUCK_HEIGHT = 20;
 var PLAYER_DUCK_WIDTH = 25;
 var LOW_OBSTACLE_HEIGHT = 20;
 var LOW_OBSTACLE_WIDTH = 15;
-var HIGH_OBSTACLE_HEIGHT = 40;
+var HIGH_OBSTACLE_HEIGHT = 50;
 var HIGH_OBSTACLE_WIDTH = 15;
 var Y_ACCELERATION = 7;
 var INIT_Y_VEL = 27;
@@ -121,14 +121,19 @@ var startNewGame = function() {
 	obstacleArray.splice(0, obstacleArray.length);
 	score = 0;
 	speedLvl = 1;
+	$('.score').text("0");
+	$('.speedLevel').text("1");
+	$('#screen').fadeTo("fast", 1);
+	$('#gameInfo').fadeTo("fast", 1);
+	$('#deathScreen').hide();
 }
 
 var spawnObstacles = function(authorized) {
 	if(authorized)
 	{
-		if(obstacleArray.length == 0 || obstacleArray[obstacleArray.length - 1].getX() < (SCREEN_WIDTH - 100))
+		if(obstacleArray.length == 0 || obstacleArray[obstacleArray.length - 1].getX() < (SCREEN_WIDTH - (80 + speedLvl * 20)))
 		{
-			if(Math.random() <= 0.34)
+			if(Math.random() <= 0.2)
 			{
 				obstacleArray.push(new Obstacle(Math.floor(2 * Math.random())));
 			}
@@ -172,16 +177,21 @@ var checkForCollision = function() {
 	return false;
 }
 
+var scoreNeeded = function(speed) {
+	return (2 * (speedLvl * speedLvl) + 3 * speedLvl)/2;
+}
+
 var update = function() {
 	
 	//Obstacle Logic
 	for(var i = 0; i < obstacleArray.length; i++)
 	{
-		obstacleArray[i].updateX(speedLvl + 7);
+		obstacleArray[i].updateX(speedLvl * 2 + 7);
 		if(!(obstacleArray[i].getHasBeenScored()) && obstacleArray[i].getX() <= (47 - HIGH_OBSTACLE_WIDTH))
 		{
 			score++;
 			obstacleArray[i].scored();
+			$('.score').text(score);
 		}	
 	}
 
@@ -201,19 +211,31 @@ var update = function() {
 	if(checkForCollision())
 	{
 		initialized = false;
+		$('#screen').fadeTo("fast", 0.5);
+		$('#gameInfo').fadeTo("fast", 0.5);
+		$('#deathScreen').fadeIn("fast");
 	}
 
+	//Display obstacles until next level
+	$('#nextLevel').text(scoreNeeded(speedLvl) - (score - scoreNeeded(speedLvl - 1)));
+
 	//Increase speedLvl
-	if((score - (speedLvl - 1) * 5) >= (speedLvl * 5))
+	if(((score - scoreNeeded(speedLvl - 1)) + obstacleArray.length > scoreNeeded(speedLvl)))
+	{
+		canSpawn = false;
+	}
+
+	if((score - scoreNeeded(speedLvl - 1)) >= scoreNeeded(speedLvl))
 	{
 		speedLvl++;
-		canSpawn = false;
+		$('.speedLevel').text(speedLvl);
 	}
 
 	if(!canSpawn && obstacleArray.length == 0)
 	{
 		canSpawn = true;
 	}
+
 
 	spawnObstacles(canSpawn);
 }
@@ -291,6 +313,7 @@ function keyDown(e) {
 	} 
 }
 
+
 //******************* MAIN ********************************
 var main = function(){
 	var interval = setInterval(loop, 50);
@@ -298,4 +321,7 @@ var main = function(){
 }
 
 main();
+$(document).ready(function() {
+	$('#deathScreen').hide();
+});
 

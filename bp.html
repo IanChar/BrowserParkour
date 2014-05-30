@@ -27,11 +27,34 @@
         </div>
       </header>
     </div>
+</div>
 
-	<div id="gameZone"> <canvas id="screen"></canvas> </div>
-	<script src="bp.js"> </script>  
-
-  </div>
+	<div id="gameZone"> 
+		<canvas id="screen"> </canvas> 
+		<div id="gameInfo">
+			<p> <u> Score </u> </p>
+			<p class="score"> 0 </p>
+			<p> <u> Speed Level </u></p>
+			<p class="speedLevel"> 1 </p>
+			<p> <u> Obstacles Until Next Level </u></p>
+			<p id="nextLevel"> 5 </p>
+			<div id="directions">
+				<p> Press ENTER to play.</p>
+				<p> Press DOWN to duck. </p>
+				<p> Press SPACE to jump. </p>
+			</div>
+		</div>
+		<div id="deathScreen">
+			<p>Your score: </p>
+			<p class="score"> 0 </p>
+			<p>Your top speed: </p>
+			<p class="speedLevel">1</p>
+			<p font-weight: bold> Press ENTER to play again! </p>
+		</div>
+	</div>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script type="text/javascript" src="bp.js"> </script>  
+  
 </body>
 
 
